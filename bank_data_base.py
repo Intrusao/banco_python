@@ -1,10 +1,17 @@
 from datetime import datetime, timedelta
 
+class Usuario:
+    def __init__(self, nome, cpf, data_nascimento):
+        self.nome = nome
+        self.cpf = cpf
+        self.data_nascimento = data_nascimento
+        self.conta_bancaria = None
+
 class ContaBancaria:
-    def __init__(self):
-        self.saldo = 5000
+    def __init__(self, saldo_inicial=0):
+        self.saldo = saldo_inicial
         self.extratos = []
-        self.saque_horas = []  # Lista para registrar as horas dos saques
+        self.saque_horas = []
 
     def deposito(self, valor):
         if valor >= 0:
@@ -18,7 +25,6 @@ class ContaBancaria:
         if valor >= 0:
             if valor <= 500:
                 if valor <= self.saldo:
-                    # Verifica o limite de 3 saques nas últimas 24 horas
                     if self.verificar_limite_saques():
                         self.saldo -= valor
                         self.extratos.append(("Saque", valor))
@@ -45,10 +51,26 @@ class ContaBancaria:
         saques_recentes = [hora for hora in self.saque_horas if now - hora <= limite]
         return len(saques_recentes) < 3
 
-conta = ContaBancaria()
+def cadastrar_usuario():
+    nome = input("Digite o nome do usuário: ")
+    cpf = input("Digite o CPF do usuário: ")
+    data_nascimento = input("Digite a data de nascimento do usuário (DD/MM/AAAA): ")
+    usuario = Usuario(nome, cpf, data_nascimento)
+    return usuario
+
+def criar_conta_bancaria(usuario, saldo_inicial=0):
+    conta = ContaBancaria(saldo_inicial)
+    usuario.conta_bancaria = conta
+    return conta
+
+# Programa principal
+print("Bem-vindo ao banco X")
+
+usuario = cadastrar_usuario()
+conta = criar_conta_bancaria(usuario)
 
 while True:
-    print("Escolha a ação:")
+    print("\nEscolha a ação:")
     print("1. Depósito")
     print("2. Saque")
     print("3. Saldo")
@@ -75,3 +97,4 @@ while True:
         break
     else:
         print("Escolha inválida")
+
