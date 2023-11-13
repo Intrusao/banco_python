@@ -38,6 +38,21 @@ class ContaBancaria:
                 print("Limite diário excedido.")
         else:
             print("Valor de saque inválido")
+            
+    def emprestimo(self, valor):
+        if valor >= 0:
+            if valor <= 1250:
+                if self.saldo >= valor:
+                    self.saldo -= valor
+                    self.extratos.append(("Empréstimo", valor))
+                    print(f"Empréstimo de {valor} realizado com sucesso.")
+                else:
+                    print("Saldo insuficiente para empréstimo.")
+            else:
+                print("Valor de empréstimo excede o limite permitido.")
+        else:
+            print("Valor de empréstimo inválido")
+            
 
     def get_saldo(self):
         return self.saldo
@@ -73,9 +88,10 @@ while True:
     print("\nEscolha a ação:")
     print("1. Depósito")
     print("2. Saque")
-    print("3. Saldo")
-    print("4. Extratos")
-    print("5. Sair")
+    print("3. Emprestimo")
+    print("4. Saldo")
+    print("5. Extratos")
+    print("6. Sair")
 
     escolha = int(input("Digite o número da ação desejada: "))
 
@@ -97,4 +113,3 @@ while True:
         break
     else:
         print("Escolha inválida")
-
