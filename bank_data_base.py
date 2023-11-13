@@ -66,11 +66,18 @@ class ContaBancaria:
         saques_recentes = [hora for hora in self.saque_horas if now - hora <= limite]
         return len(saques_recentes) < 3
 
-def cadastrar_usuario():
-    nome = input("Digite o nome do usuário: ")
+def cadastrar_usuario(usuarios):
     cpf = input("Digite o CPF do usuário: ")
+
+    for usuario in usuarios:
+        if usuario.cpf == cpf:
+            print("CPF já cadastrado. Não é permitido mais de um cadastro com o mesmo CPF.")
+            return None
+
+    nome = input("Digite o nome do usuário: ")
     data_nascimento = input("Digite a data de nascimento do usuário (DD/MM/AAAA): ")
     usuario = Usuario(nome, cpf, data_nascimento)
+    usuarios.append(usuario)
     return usuario
 
 def criar_conta_bancaria(usuario, saldo_inicial=0):
@@ -78,38 +85,48 @@ def criar_conta_bancaria(usuario, saldo_inicial=0):
     usuario.conta_bancaria = conta
     return conta
 
-# Programa principal
 print("Bem-vindo ao banco X")
 
-usuario = cadastrar_usuario()
-conta = criar_conta_bancaria(usuario)
+usuarios = []
+conta = ContaBancaria()  # Corrija a linha que cria uma instância de ContaBancaria
 
 while True:
     print("\nEscolha a ação:")
-    print("1. Depósito")
-    print("2. Saque")
-    print("3. Emprestimo")
-    print("4. Saldo")
-    print("5. Extratos")
-    print("6. Sair")
+    print("1. Cadastrar Usuário")
+    print("2. Depósito")
+    print("3. Saque")
+    print("4. Empréstimo")
+    print("5. Saldo")
+    print("6. Extratos")
+    print("7. Sair")
 
     escolha = int(input("Digite o número da ação desejada: "))
 
     if escolha == 1:
+        usuario = cadastrar_usuario(usuarios)
+        if usuario:
+            criar_conta_bancaria(usuario)
+            print("Usuário cadastrado com sucesso.")
+    elif escolha == 2:
         valor = int(input("Digite o valor de depósito: "))
         conta.deposito(valor)
-    elif escolha == 2:
+    elif escolha == 3:
         valor = int(input("Digite o valor de saque: "))
         conta.saque(valor)
-    elif escolha == 3:
-        print(f"Saldo atual: {conta.get_saldo()}")
     elif escolha == 4:
+        valor = int(input("Digite o valor do empréstimo: "))
+        conta.emprestimo(valor)
+    elif escolha == 5:
+        print(f"Saldo atual: {conta.get_saldo()}")
+    elif escolha == 6:
         extratos = conta.get_extratos()
         print("Extratos:")
         for transacao in extratos:
             print(f"{transacao[0]}: {transacao[1]}")
-    elif escolha == 5:
+    elif escolha == 7:
         print("Obrigado por usar o banco X")
         break
     else:
         print("Escolha inválida")
+
+
